@@ -1,16 +1,55 @@
-# React + Vite
+# Nesty Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend of Nesty is built with React and Vite.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- Vite
+- React Router DOM
+- Axios
+- Zustand
+- Tailwind CSS
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From the `frontend` directory, install dependencies:
 
-## Expanding the ESLint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Vite will display the local development URL in the terminal.
+
+## Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run build` | Build the production version |
+| `npm run lint` | Run ESLint |
+| `npm run preview` | Preview the production build |
+
+## API Configuration
+
+The API base URL is configured in:
+
+```text
+src/api/axiosClient.js
+```
+
+Current local backend URL:
+
+```text
+https://localhost:7035/api
+```
+
+The Axios client automatically attaches the JWT token stored in browser `localStorage` to authenticated requests.

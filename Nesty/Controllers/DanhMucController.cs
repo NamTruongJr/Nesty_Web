@@ -6,6 +6,7 @@ using Nesty.Application.Interfaces;
 [ApiController]
 [Route("api/admin/danh-muc")]
 [Authorize(Roles = "Admin")]
+
 public class DanhMucController : ControllerBase
 {
     private readonly IDanhMucService _service;
@@ -17,6 +18,7 @@ public class DanhMucController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetAll()
     {
         var result =
@@ -26,6 +28,7 @@ public class DanhMucController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetById(int id)
     {
         var result =
