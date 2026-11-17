@@ -1,6 +1,6 @@
-# Nesty – E-commerce Platform
+# Nesty - E-commerce Platform
 
-Nesty is an e-commerce web application developed as a team project. It consists of an ASP.NET Core Web API backend and a React frontend.
+Nesty is a team-developed e-commerce web application built with ASP.NET Core Web API and React. The project provides an online shopping experience and administrative features for managing products, orders, customers, and inventory.
 
 ## Tech Stack
 
@@ -15,7 +15,7 @@ Nesty is an e-commerce web application developed as a team project. It consists 
 ### Frontend
 - React 19
 - Vite
-- React Router
+- React Router DOM
 - Axios
 - Zustand
 - Tailwind CSS
@@ -24,18 +24,18 @@ Nesty is an e-commerce web application developed as a team project. It consists 
 
 ```text
 Nesty-Project/
-├── Nesty/
-│   ├── Nesty.sln
-│   ├── Nesty.csproj
-│   ├── Controllers/
-│   └── Properties/
-├── Nesty.Domain/
-├── Nesty.Application/
-├── Nesty.Infrastructure/
-└── frontend/
-    ├── src/
-    ├── public/
-    └── package.json
+|-- Nesty/
+|   |-- Nesty.sln
+|   |-- Nesty.csproj
+|   |-- Controllers/
+|   `-- Properties/
+|-- Nesty.Domain/
+|-- Nesty.Application/
+|-- Nesty.Infrastructure/
+`-- frontend/
+    |-- src/
+    |-- public/
+    `-- package.json
 ```
 
 ## Main Features
@@ -68,11 +68,18 @@ cd Nesty_Web
 
 ### 2. Configure the backend
 
-Configure the database connection string and JWT settings in the backend configuration.
+Configure the SQL Server connection string and JWT settings.
 
-Use `Nesty/appsettings.Example.json` as a reference and create your own local `Nesty/appsettings.json`.
+Use `Nesty/appsettings.Example.json` as a reference and create a local `Nesty/appsettings.json` file.
 
-Do not commit real database credentials or JWT secrets.
+Update the following settings with your own values:
+
+- `ConnectionStrings:DefaultConnection`
+- `Jwt:Issuer`
+- `Jwt:Audience`
+- `Jwt:Key`
+
+Never commit real database credentials or JWT secrets.
 
 ### 3. Run the backend
 
@@ -109,12 +116,13 @@ npm run dev
 
 Vite will display the local frontend URL in the terminal.
 
-## Notes
+## Additional Notes
 
-- The frontend API base URL is currently configured in `frontend/src/api/axiosClient.js`.
-- The backend uses SQL Server and requires a valid local database configuration.
-- Local settings and secrets should not be committed to the repository.
+- The frontend API base URL is configured in `frontend/src/api/axiosClient.js`.
+- The current local API base URL is `https://localhost:7035/api`.
+- The backend requires a valid SQL Server connection.
+- Local configuration files and secrets should not be committed.
 
 ## Project Status
 
-Developed as a team project for learning and practicing full-stack web application development.
+Nesty was developed as a team project for learning and practicing full-stack web application development.
