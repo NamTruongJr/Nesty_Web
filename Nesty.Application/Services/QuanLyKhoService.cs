@@ -13,8 +13,46 @@ public class QuanLyKhoService : IQuanLyKhoService
         _unitOfWork = unitOfWork;
     }
 
+    // Kiểm tra thông tin bắt buộc của phiếu nhập trước khi ghi nhận.
+    // Lỗi dữ liệu người dùng nhập -> ném ArgumentException để controller trả về 400 kèm thông báo.
+    private async Task ValidatePhieuNhapAsync(PhieuNhapKhoRequest request)
+    {
+        if (request.KhoID <= 0 || request.NhaCungCapID <= 0)
+            throw new ArgumentException("Vui lòng chọn kho và nhà cung cấp.");
+
+        if (request.ChiTiet == null || request.ChiTiet.Count == 0)
+            throw new ArgumentException("Phiếu nhập phải có ít nhất một sản phẩm/biến thể.");
+
+        var kho = await _unitOfWork.Khos.GetByIdAsync(request.KhoID);
+        if (kho == null || !kho.TrangThai)
+            throw new ArgumentException("Kho đã chọn không tồn tại hoặc đã ngừng hoạt động.");
+
+        var nhaCungCap = await _unitOfWork.NhaCungCaps.GetByIdAsync(request.NhaCungCapID);
+        if (nhaCungCap == null || !nhaCungCap.TrangThai)
+            throw new ArgumentException("Nhà cung cấp đã chọn không tồn tại hoặc đã ngừng hợp tác.");
+
+        foreach (var item in request.ChiTiet)
+        {
+            if (item.BienTheID <= 0)
+                throw new ArgumentException("Vui lòng chọn biến thể sản phẩm cho tất cả các dòng.");
+
+            if (item.SoLuong <= 0)
+                throw new ArgumentException("Số lượng nhập phải là số nguyên dương.");
+
+            if (item.DonGiaNhap < 0)
+                throw new ArgumentException("Đơn giá nhập không được nhỏ hơn 0.");
+
+            var bienThe = await _unitOfWork.BienThes.GetByIdAsync(item.BienTheID);
+            if (bienThe == null)
+                throw new ArgumentException($"Biến thể có ID {item.BienTheID} không tồn tại.");
+        }
+    }
+
     public async Task<bool> NhapKhoAsync(PhieuNhapKhoRequest request)
     {
+        // Kiểm tra dữ liệu đầu vào trước khi mở Transaction
+        await ValidatePhieuNhapAsync(request);
+
         // Sử dụng Transaction để đảm bảo tính toàn vẹn dữ liệu nếu có lỗi xảy ra giữa chừng
         await _unitOfWork.BeginTransactionAsync();
         try
@@ -111,6 +149,48 @@ public class QuanLyKhoService : IQuanLyKhoService
             MauSac = x.BienTheSanPham?.MauSac?.TenMau ?? string.Empty,
             SoLuongTon = x.SoLuongTon,
             NgayCapNhat = x.NgayCapNhat
+        }).ToList();
+    }
+
+    public async Task<List<KhoOptionResponse>> LayDanhSachKhoAsync()
+    {
+        var khos = await _unitOfWork.Khos.GetAllAsync();
+        return khos
+            .Where(x => x.TrangThai)
+            .OrderBy(x => x.TenKho)
+            .Select(x => new KhoOptionResponse
+            {
+                KhoID = x.KhoID,
+                TenKho = x.TenKho,
+                DiaChi = x.DiaChi
+            }).ToList();
+    }
+
+    public async Task<List<NhaCungCapOptionResponse>> LayDanhSachNhaCungCapAsync()
+    {
+        var nhaCungCaps = await _unitOfWork.NhaCungCaps.GetAllAsync();
+        return nhaCungCaps
+            .Where(x => x.TrangThai)
+            .OrderBy(x => x.TenNhaCungCap)
+            .Select(x => new NhaCungCapOptionResponse
+            {
+                NhaCungCapID = x.NhaCungCapID,
+                TenNhaCungCap = x.TenNhaCungCap,
+                SoDienThoai = x.SoDienThoai
+            }).ToList();
+    }
+
+    public async Task<List<BienTheOptionResponse>> LayDanhSachBienTheAsync()
+    {
+        var bienThes = await _unitOfWork.BienThes.GetAllActiveWithDetailsAsync();
+        return bienThes.Select(x => new BienTheOptionResponse
+        {
+            BienTheID = x.BienTheID,
+            SanPhamID = x.SanPhamID,
+            TenSanPham = x.SanPham?.TenSanPham ?? string.Empty,
+            SKU = x.SKU,
+            KichThuoc = x.KichThuoc?.TenKichThuoc ?? string.Empty,
+            MauSac = x.MauSac?.TenMau ?? string.Empty
         }).ToList();
     }
 }

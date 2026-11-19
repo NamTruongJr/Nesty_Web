@@ -13,6 +13,8 @@ public class UnitOfWork : IUnitOfWork
     private IRepository<GiaoDichKho>? _giaoDichKhos;
     private IRepository<ThanhToan>? _thanhToans;
     private IRepository<PhieuNhapKho>? _phieuNhapKhos;
+    private IRepository<Kho>? _khos;
+    private IRepository<NhaCungCap>? _nhaCungCaps;
 
     // DAY 13: THÊM BACKING FIELD CHO CHATBOT
     private IRepository<CuocHoiThoai>? _cuocHoiThoais;
@@ -39,6 +41,12 @@ public class UnitOfWork : IUnitOfWork
 
     public IRepository<PhieuNhapKho> PhieuNhapKhos =>
         _phieuNhapKhos ??= new Repository<PhieuNhapKho>(_context);
+
+    public IRepository<Kho> Khos =>
+        _khos ??= new Repository<Kho>(_context);
+
+    public IRepository<NhaCungCap> NhaCungCaps =>
+        _nhaCungCaps ??= new Repository<NhaCungCap>(_context);
 
     public IRepository<ThanhToan> ThanhToans =>
         _thanhToans ??= new Repository<ThanhToan>(_context);

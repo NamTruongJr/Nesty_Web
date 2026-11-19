@@ -29,6 +29,8 @@ public interface IUnitOfWork
 
     // day 12
     IRepository<PhieuNhapKho> PhieuNhapKhos { get; }
+    IRepository<Kho> Khos { get; }
+    IRepository<NhaCungCap> NhaCungCaps { get; }
 
     // Thanh toán
     IRepository<ThanhToan> ThanhToans { get; }

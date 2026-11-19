@@ -24,4 +24,16 @@ public class BienTheRepository
             .Where(x => x.SanPhamID == sanPhamId)
             .ToListAsync();
     }
+
+    public async Task<List<BienTheSanPham>> GetAllActiveWithDetailsAsync()
+    {
+        return await _dbSet
+            .Include(x => x.SanPham)
+            .Include(x => x.KichThuoc)
+            .Include(x => x.MauSac)
+            .Where(x => x.TrangThai)
+            .OrderBy(x => x.SanPham.TenSanPham)
+            .ThenBy(x => x.BienTheID)
+            .ToListAsync();
+    }
 }
